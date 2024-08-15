@@ -1,6 +1,8 @@
 # TODO: Change to UBI Image
 FROM python:3.11-alpine3.18
 
+WORKDIR $HOME
+
 # create a non-privileged user to use at runtime
 RUN addgroup -g 50 -S pgadmin \
  && adduser -D -S -h /pgadmin -s /sbin/nologin -u 1000 -G pgadmin pgadmin \
@@ -21,8 +23,8 @@ RUN apk add --no-cache curl alpine-sdk linux-headers \
  && pip install --upgrade pip 
 
 # Install pgadmin tool 
-RUN curl -SO https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v${PGADMIN_VERSION}/pip/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl
-RUN pip install pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl && apk del alpine-sdk linux-headers
+COPY pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl $HOME
+RUN pip install $HOME/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl && apk del alpine-sdk linux-headers
 
 EXPOSE 5050
 

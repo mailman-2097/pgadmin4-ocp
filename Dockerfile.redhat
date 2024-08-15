@@ -1,0 +1,34 @@
+FROM registry.access.redhat.com/ubi9/python-312:1-20.1722518948
+
+USER root
+
+WORKDIR /home/pgadmin
+
+# create a non-privileged user to use at runtime
+RUN yum install shadow-utils ca-certificates -y \
+ && useradd -u 1000 -r -g 50 -d /pgadmin -s /sbin/nologin -c "pgAdmin" pgadmin \
+ && mkdir -p /pgadmin/config /pgadmin/storage \
+ && chown -R 1000:50 /pgadmin
+
+# Install postgresql tools for backup/restore
+RUN yum install libedit postgresql postgresql-devel libffi-devel -y
+
+ARG PGADMIN_VERSION=8.9
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Install linux headers and upgrade pip
+RUN yum install curl gcc glibc-devel make linux-headers -y \
+ && pip install --upgrade pip 
+
+# Install pgadmin tool
+RUN curl -SO https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v${PGADMIN_VERSION}/pip/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl
+RUN pip install pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl 
+
+EXPOSE 5050
+
+COPY config_distro.py /usr/local/lib/python3.9/site-packages/pgadmin4/
+
+# USER pgadmin:pgadmin
+USER root
+CMD ["python", "/usr/local/lib/python3.9/site-packages/pgadmin4/pgAdmin4.py"]
+VOLUME /pgadmin/
