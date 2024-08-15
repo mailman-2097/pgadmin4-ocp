@@ -23,9 +23,10 @@ RUN apk add --no-cache curl alpine-sdk linux-headers \
  && pip install --upgrade pip 
 
 # Install pgadmin tool 
-COPY cacert.pem ~
-RUN pwd && ls -al ~
-RUN curl --cacert ~/cacert.pem -SO https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v${PGADMIN_VERSION}/pip/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl
+COPY cacert.pem $HOME
+RUN pwd && ls -al $HOME
+# RUN curl --cacert ~/cacert.pem -SO https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v${PGADMIN_VERSION}/pip/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl
+RUN curl -SO https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v${PGADMIN_VERSION}/pip/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl
 RUN pip install pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl && apk del alpine-sdk linux-headers
 
 EXPOSE 5050
