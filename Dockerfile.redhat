@@ -21,8 +21,10 @@ RUN yum install curl gcc glibc-devel make linux-headers -y \
  && pip install --upgrade pip 
 
 # Install pgadmin tool
-RUN curl -SO https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v${PGADMIN_VERSION}/pip/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl
-RUN pip install pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl 
+# curl -SO https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v${PGADMIN_VERSION}/pip/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl
+
+COPY pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl /tmp/
+RUN pip install /tmp/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl 
 
 EXPOSE 5050
 

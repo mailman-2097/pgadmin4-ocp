@@ -23,8 +23,8 @@ RUN apk add --no-cache curl alpine-sdk linux-headers \
  && pip install --upgrade pip 
 
 # Install pgadmin tool 
-COPY pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl $HOME
-RUN pip install $HOME/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl && apk del alpine-sdk linux-headers
+COPY pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl /tmp/
+RUN pwd && ls -altr /tmp && pip install /tmp/pgadmin4-${PGADMIN_VERSION}-py3-none-any.whl && apk del alpine-sdk linux-headers
 
 EXPOSE 5050
 
